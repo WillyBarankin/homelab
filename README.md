@@ -68,11 +68,36 @@ graph TD;
 
 ---
 
+## 🧮 Virtual Machines on Proxmox
+
+| VM Name     | Purpose               | Notes |
+|-------------|-----------------------|-------|
+| `k3s-cp-1`  | K3s Control Plane     | Hosts core Kubernetes services: etcd, kube-apiserver, scheduler |
+| `k3s-w-1`   | K3s Worker Node       | GPU-enabled node running Ollama, OpenWebUI, and other workloads |
+
+### ⚙️ Planned CI/CD Services Deployment
+
+| Service/Tool                      | Deployment Target      | Rationale |
+|----------------------------------|------------------------|-----------|
+| **GitLab CE**                    | 🆕 **Separate VM**      | GitLab is a resource-intensive service; isolating it improves reliability and avoids contention with K3s workloads. |
+| **GitLab Runner**                | `k3s-w-1` (K3s)         | Easily deployed via Helm inside K3s; leverages Kubernetes scheduling and scaling. |
+| **ArgoCD**                       | `k3s-cp-1` (K3s)        | Designed to run within Kubernetes; integrates tightly with GitOps workflows. |
+| **GitLab Container Registry**    | Same as GitLab CE VM   | Runs alongside GitLab and depends on its filesystem and Docker registry integration. |
+| **External Secrets / SOPS + KMS** | `k3s-cp-1` (K3s)       | Lightweight controller; clean integration into K3s for secret syncing from encrypted files. |
+
+### 🆕 Planned New VM
+
+| VM Name     | Purpose       | Recommended Specs              | Notes |
+|-------------|---------------|-------------------------------|-------|
+| `gitlab-ce` | GitLab Server | 4–8 vCPU, 8–16GB RAM, 100GB+ disk | Hosts GitLab CE and its container registry; backup-friendly and self-contained. |
+
+---
+
 ## 📌 To Do
 
 - [ ] Add Helm-based deployment instructions
 - [ ] Benchmark LLM inference performance
-- [ ] Set up Watchtower for deploying automatic updates
+- [ ] Set up automatic image version update.
 - [ ] Add common best-practice CI/CD services (GitLab CE, ArgoCD, runner agents, container registry, webhooks, secrets management, etc.)
 
 ## 💡 CI/CD Best-Practice Services (Planned)
