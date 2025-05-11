@@ -168,7 +168,7 @@ To simulate a production-like environment for DevOps experimentation and persona
 
 Here are helpful guides I used when setting up this homelab. Each link points to a well-written and updated resource:
 
-- [**K3s Setup Guide**](https://docs.k3s.io/installation/)
+- [**K3s Docs**](https://docs.k3s.io/installation/)
   Official K3s documentation on setting up K3s in various environments.
 
 - [**Proxmox Wiki - PCI(e) Passthrough**](https://pve.proxmox.com/wiki/Pci_passthrough)
