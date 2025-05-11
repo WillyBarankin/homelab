@@ -81,7 +81,7 @@ NAT (Network Address Translation) is required because:
 
 - The USB Wi-Fi interface cannot be bridged in Proxmox (no MAC spoofing support).
 - All K3s nodes are on a private internal network (e.g., `192.168.100.0/24`).
-- Public internet traffic must be **masqueraded** through the host’s Wi-Fi interface.
+- Public internet traffic must be routed through the host using masquerade rules.
 
 ### 🧱 Current iptables Configuration
 
