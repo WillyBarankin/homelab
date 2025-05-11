@@ -98,8 +98,6 @@ iptables -t nat -A PREROUTING -p tcp --dport 8080 -j DNAT --to-destination 192.1
 iptables -t nat -A POSTROUTING -p tcp -d 192.168.100.3 --dport 32000 -j MASQUERADE
 ```
 
----
-
 ### 🧪 Example: Accessing OpenWebUI
 
 With the current setup, I can access the OpenWebUI chat interface by visiting:
@@ -110,14 +108,11 @@ http://<proxmox-ip>:8080
 
 This forwards traffic to the NodePort inside the K3s worker node.
 
----
-
 ### 🛠️ Future Plans
 
 - Replace USB Wi-Fi with a bridgable Ethernet interface or PCI Wi-Fi card to simplify networking.
 - Move port forwarding logic to a managed firewall script or tool (e.g., `firewalld`, `ufw`, or Ansible role).
 - Add HTTPS reverse proxy (e.g., Caddy or Nginx) to expose selected services securely.
-
 
 ---
 
