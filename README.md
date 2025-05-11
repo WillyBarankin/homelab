@@ -1,6 +1,6 @@
 # 🏡 HomeLab Setup: K3s + Ollama + OpenWebUI on Proxmox
 
-This project describes a lightweight, GPU-accelerated home lab deployment using [K3s](https://k3s.io/), [Ollama](https://ollama.com/), and [OpenWebUI](https://github.com/open-webui/open-webui). The system is optimized for running local LLMs with GPU passthrough on a Proxmox-hosted Kubernetes cluster.
+This project describes a lightweight, GPU-accelerated home lab deployment using [K3s](https://k3s.io/), [Ollama](https://ollama.com/), and [OpenWebUI](https://github.com/open-webui/open-webui). The system is optimized for for running local large language models (LLMs) with GPU passthrough on a Proxmox-hosted Kubernetes cluster.
 
 ---
 
@@ -64,7 +64,7 @@ graph TD;
 
 - USB Wi-Fi restricts use of bridged networking (using NAT instead)
 - Manual GPU unlock required for P104-100
-- P2 NVMe may throttle under sustained load (consider upgrade)
+- P2 NVMe may throttle under sustained load
 
 ---
 
