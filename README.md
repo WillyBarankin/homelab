@@ -198,13 +198,6 @@ A curated list of high-quality guides and documentation to help replicate or bet
 
 ---
 
-## 📌 To Do
-
-- [ ] Add Helm-based deployment instructions
-- [ ] Benchmark LLM inference performance
-- [ ] Set up automatic image version update.
-- [ ] Add common best-practice CI/CD services (GitLab CE, ArgoCD, runner agents, container registry, webhooks, secrets management, etc.)
-
 ## 💡 Planned CI/CD Stack for the Homelab
 
 To simulate a production-like environment for DevOps experimentation and personal projects, the following CI/CD stack is planned:
@@ -219,4 +212,12 @@ To simulate a production-like environment for DevOps experimentation and persona
 | **Webhook Gateway** | Gitea Webhook Proxy / GitLab Webhooks | Event-based triggers for pipelines and auto-deploy hooks                 |
 | **Monitoring & Alerts** | Prometheus + Alertmanager | Observability stack for CI runners, ArgoCD status, and pod health        |
 | **Dashboarding**    | Grafana          | Visualization of CI/CD and cluster health metrics                        |
+
+
+## 📌 To Do
+
+- [ ] Add Helm-based deployment instructions
+- [ ] Benchmark LLM inference performance
+- [ ] Set up automatic image version update.
+- [ ] Add common best-practice CI/CD services (GitLab CE, ArgoCD, runner agents, container registry, webhooks, secrets management, etc.)
 
