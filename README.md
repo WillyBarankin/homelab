@@ -63,7 +63,7 @@ graph TD;
 ## 🚧 Known Limitations
 
 - USB Wi-Fi restricts use of bridged networking (using NAT instead)
-- Manual GPU unlock required for P104-100
+- GPU (**EVGA P104-100**) requires manual unlocking by flashing [this BIOS file](https://www.techpowerup.com/vgabios/228114/228114) using the `nvflash` utility to enable full access to all 8 GB of physical memory.
 - P2 NVMe may throttle under sustained load
 
 ---
