@@ -49,16 +49,12 @@ graph TD;
 - **OpenWebUI** – provides a browser-based chat interface
 - **NVIDIA GPU Operator** – used for automatic GPU provisioning in Kubernetes
 
----
-
 ## 🔧 Services Running
 
 | Node           | Services                                 |
 |----------------|------------------------------------------|
 | Control Plane  | etcd, CoreDNS, kube-apiserver, scheduler |
 | Worker Node    | Ollama, OpenWebUI, NVIDIA Operator       |
-
----
 
 ## 🚧 Known Limitations
 
@@ -148,6 +144,29 @@ This forwards traffic to the NodePort inside the K3s worker node.
 |-------------|---------------|-------------------------------|-------|
 | `gitlab-ce` | GitLab Server | 4–8 vCPU, 8–16GB RAM, 100GB+ disk | Hosts GitLab CE and its container registry; backup-friendly and self-contained. |
 
+## 💡 Planned CI/CD Stack for the Homelab
+
+To simulate a production-like environment for DevOps experimentation and personal projects, the following CI/CD stack is planned:
+
+| Category            | Tool/Service     | Purpose                                                                 |
+|---------------------|------------------|-------------------------------------------------------------------------|
+| **Git Hosting**     | GitLab CE        | Centralized Git repository management and integrated CI/CD platform     |
+| **Runners**         | GitLab Runner    | Executes CI/CD pipelines on Kubernetes worker nodes                     |
+| **K8s GitOps**      | ArgoCD           | Declarative GitOps delivery and continuous deployment for K8s workloads |
+| **Container Registry** | GitLab Container Registry (self-hosted) | Stores Docker images securely within the GitLab CE environment          |
+| **Secrets Management** | External Secrets / SOPS + KMS | Secure injection of secrets into Kubernetes from version-controlled encrypted files |
+| **Webhook Gateway** | Gitea Webhook Proxy / GitLab Webhooks | Event-based triggers for pipelines and auto-deploy hooks                 |
+| **Monitoring & Alerts** | Prometheus + Alertmanager | Observability stack for CI runners, ArgoCD status, and pod health        |
+| **Dashboarding**    | Grafana          | Visualization of CI/CD and cluster health metrics                        |
+
+
+## 📌 To Do
+
+- [ ] Add Helm-based deployment instructions
+- [ ] Benchmark LLM inference performance
+- [ ] Set up automatic image version update.
+- [ ] Add common best-practice CI/CD services (GitLab CE, ArgoCD, runner agents, container registry, webhooks, secrets management, etc.)
+
 ---
 
 ## 🔗 Deployment Reference Guides
@@ -171,29 +190,4 @@ Here are helpful guides I used when setting up this homelab. Each link points to
 
 - [**Ollama - Github**](https://github.com/ollama/ollama)
   Official instructions for CLI usage, model downloads, and local hosting.
-
----
-
-## 💡 Planned CI/CD Stack for the Homelab
-
-To simulate a production-like environment for DevOps experimentation and personal projects, the following CI/CD stack is planned:
-
-| Category            | Tool/Service     | Purpose                                                                 |
-|---------------------|------------------|-------------------------------------------------------------------------|
-| **Git Hosting**     | GitLab CE        | Centralized Git repository management and integrated CI/CD platform     |
-| **Runners**         | GitLab Runner    | Executes CI/CD pipelines on Kubernetes worker nodes                     |
-| **K8s GitOps**      | ArgoCD           | Declarative GitOps delivery and continuous deployment for K8s workloads |
-| **Container Registry** | GitLab Container Registry (self-hosted) | Stores Docker images securely within the GitLab CE environment          |
-| **Secrets Management** | External Secrets / SOPS + KMS | Secure injection of secrets into Kubernetes from version-controlled encrypted files |
-| **Webhook Gateway** | Gitea Webhook Proxy / GitLab Webhooks | Event-based triggers for pipelines and auto-deploy hooks                 |
-| **Monitoring & Alerts** | Prometheus + Alertmanager | Observability stack for CI runners, ArgoCD status, and pod health        |
-| **Dashboarding**    | Grafana          | Visualization of CI/CD and cluster health metrics                        |
-
-
-## 📌 To Do
-
-- [ ] Add Helm-based deployment instructions
-- [ ] Benchmark LLM inference performance
-- [ ] Set up automatic image version update.
-- [ ] Add common best-practice CI/CD services (GitLab CE, ArgoCD, runner agents, container registry, webhooks, secrets management, etc.)
 
