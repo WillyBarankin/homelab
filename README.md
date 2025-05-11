@@ -150,51 +150,27 @@ This forwards traffic to the NodePort inside the K3s worker node.
 
 ---
 
-## 🔗 Useful Setup Guides
+## 🔗 Deployment Reference Guides
 
-A curated list of high-quality guides and documentation to help replicate or better understand the setup used in this project:
+Here are helpful guides I used when setting up this homelab. Each link points to a well-written and updated resource:
 
-### 🎮 GPU Passthrough in Proxmox
+- [**K3s Setup Guide**](https://docs.k3s.io/installation/)
+  Official K3s documentation on setting up K3s in various environments.
 
-- **Proxmox Wiki - PCI(e) Passthrough**  
-  [https://pve.proxmox.com/wiki/Pci_passthrough](https://pve.proxmox.com/wiki/Pci_passthrough)  
+- [**Proxmox Wiki - PCI(e) Passthrough**](https://pve.proxmox.com/wiki/Pci_passthrough)
   Official Proxmox guide on configuring IOMMU, GRUB, and passthrough devices.
 
-- **3D Accelerated Proxmox GPU Passthrough Guide (YouTube, 2023)**  
-  [https://www.youtube.com/watch?v=9kC5lfPBmUA](https://www.youtube.com/watch?v=9kC5lfPBmUA)  
-  Step-by-step video guide with UEFI, VFIO, and Windows/Linux VM examples.
-
-- **Reddit Proxmox + NVIDIA Headless GPU Passthrough Discussion**  
-  [https://www.reddit.com/r/Proxmox/comments/px9kqf/](https://www.reddit.com/r/Proxmox/comments/px9kqf/)  
-  Community troubleshooting and tips for unlocking and using NVIDIA mining cards (like P104-100).
-
-### ⚙️ Deploying the NVIDIA GPU Operator in Kubernetes
-
-- **NVIDIA Official GPU Operator Docs**  
-  [https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/)  
+- [**NVIDIA Official GPU Operator Docs**](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/)
   Canonical resource for deploying the GPU Operator with Helm or manifests.
 
-- **K3s & NVIDIA GPU Operator on a Single Node**  
-  [https://developer.nvidia.com/blog/kubernetes-on-the-edge-with-k3s/](https://developer.nvidia.com/blog/kubernetes-on-the-edge-with-k3s/)  
-  Practical guide using K3s, Helm, and NVIDIA runtime for edge AI.
-
-- **GitHub - NVIDIA GPU Operator Repo**  
-  [https://github.com/NVIDIA/gpu-operator](https://github.com/NVIDIA/gpu-operator)  
+- [**GitHub - NVIDIA GPU Operator Repo**](https://github.com/NVIDIA/gpu-operator)
   Source code and deployment examples.
 
-### 🧠 Ollama + OpenWebUI Deployment on Kubernetes
-
-- **OpenWebUI GitHub (K8s manifests available)**  
-  [https://github.com/open-webui/open-webui](https://github.com/open-webui/open-webui)  
+- [**OpenWebUI GitHub (K8s manifests available)**](https://github.com/open-webui/open-webui)
   Includes Docker and Kubernetes options, community-maintained.
 
-- **Ollama Docs - Running Models Locally**  
-  [https://ollama.com/docs](https://ollama.com/docs)  
+- [**Ollama - Github**](https://github.com/ollama/ollama)
   Official instructions for CLI usage, model downloads, and local hosting.
-
-- **Running Ollama in Kubernetes with GPU Support**  
-  [https://blog.k8sgpt.ai/run-ollama-on-kubernetes/](https://blog.k8sgpt.ai/run-ollama-on-kubernetes/)  
-  Covers NodePort exposure, GPU scheduling, and Helm setup.
 
 ---
 
