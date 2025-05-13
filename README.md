@@ -10,7 +10,7 @@ This project describes a lightweight, GPU-accelerated home lab deployment using 
 |----------------|------------------------------------------------|
 | **CPU**         | Intel Xeon E5-2673 v4 (20 cores / 40 threads) |
 | **Motherboard** | X99K (Socket 2011-3)                          |
-| **RAM**         | 32GB DDR4 ECC (2×16GB)                        |
+| **RAM**         | 64GB DDR4 ECC (4×16GB)                        |
 | **GPU**         | Nvidia EVGA P104-100 (8GB VRAM, unlocked)     |
 | **Storage**     | 1TB Crucial P2 NVMe SSD                       |
 | **NIC**         | USB Wi-Fi Adapter *(temporary workaround)*    |
