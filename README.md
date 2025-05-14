@@ -130,7 +130,6 @@ This forwards traffic to the NodePort inside the K3s worker node.
 | **GitLab CE**                    | 🆕 **Separate VM**      | GitLab is a resource-intensive service; isolating it improves reliability and avoids contention with K3s workloads. |
 | **GitLab Runner**                | `k3s-w-1` (K3s)         | Easily deployed via Helm inside K3s; leverages Kubernetes scheduling and scaling. |
 | **ArgoCD**                       | `k3s-cp-1` (K3s)        | Designed to run within Kubernetes; integrates tightly with GitOps workflows. |
-| **GitLab Container Registry**    | Same as GitLab CE VM   | Runs alongside GitLab and depends on its filesystem and Docker registry integration. |
 | **External Secrets / SOPS + KMS** | `k3s-cp-1` (K3s)       | Lightweight controller; clean integration into K3s for secret syncing from encrypted files. |
 
 ### 🆕 Planned New VM
