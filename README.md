@@ -2,6 +2,8 @@
 
 This project describes a lightweight, GPU-accelerated home lab deployment using [K3s](https://k3s.io/), [Ollama](https://ollama.com/), and [OpenWebUI](https://github.com/open-webui/open-webui). The system is optimized for for running local large language models (LLMs) with GPU passthrough on a Proxmox-hosted Kubernetes cluster.
 
+![homelab-architecture (7) drawio](https://github.com/user-attachments/assets/cb9f12b0-3b51-463f-8599-8052e3068745)
+
 ---
 
 ## 📦 Hardware Overview
