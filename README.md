@@ -15,7 +15,7 @@ This project describes a lightweight, GPU-accelerated home lab deployment using 
 | **RAM**         | 64GB DDR4 ECC (4×16GB)                        |
 | **GPU**         | Nvidia EVGA P104-100 (8GB VRAM, unlocked)     |
 | **Storage**     | 1TB Crucial P2 NVMe SSD                       |
-| **NIC**         | USB Wi-Fi Adapter *(temporary workaround)*    |
+| **NIC**         | 1 Gb/s Ethernet adapter                       |
 
 ---
 
@@ -24,7 +24,7 @@ This project describes a lightweight, GPU-accelerated home lab deployment using 
 - **Hypervisor**: Proxmox VE
 - **Virtualization Type**: KVM/QEMU
 - **GPU Passthrough**: Enabled (via `vfio` + NVIDIA GPU Operator in K3s)
-- **Networking**: NAT-based forwarding (USB Wi-Fi prevents bridged mode)
+- **Networking**: Ethernet with Bridged Networking
 
 ---
 
@@ -60,7 +60,6 @@ graph TD;
 
 ## 🚧 Known Limitations
 
-- USB Wi-Fi restricts use of bridged networking (using NAT instead)
 - GPU (**EVGA P104-100**) requires manual unlocking by flashing [this BIOS file](https://www.techpowerup.com/vgabios/228114/228114) using the `nvflash` utility to enable full access to all 8 GB of physical memory.
 - P2 NVMe may throttle under sustained load
 
