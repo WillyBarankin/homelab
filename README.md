@@ -2,8 +2,7 @@
 
 This project describes a lightweight, GPU-accelerated home lab deployment using [K3s](https://k3s.io/), [Ollama](https://ollama.com/), and [OpenWebUI](https://github.com/open-webui/open-webui). The system is optimized for for running local large language models (LLMs) with GPU passthrough on a Proxmox-hosted Kubernetes cluster.
 
-![image](https://github.com/user-attachments/assets/325e7d75-c1a9-485b-8bf4-9f732ecbff2a)
-
+![image](https://github.com/user-attachments/assets/98bcf97d-0e50-4209-b8ae-6282ec85cd27)
 
 ---
 
@@ -25,7 +24,10 @@ This project describes a lightweight, GPU-accelerated home lab deployment using 
 - **Hypervisor**: Proxmox VE
 - **Virtualization Type**: KVM/QEMU
 - **GPU Passthrough**: Enabled (via `vfio` + NVIDIA GPU Operator in K3s)
-- **Networking**: Ethernet with Bridged Networking
+- **Networking**:
+  - **LAN** (bridged) for internal traffic and overlay networks
+  - **NAT** via home router for outbound/internet traffic
+  - **HTTPS exposed** via reverse proxy
 
 ---
 
@@ -51,6 +53,7 @@ graph TD;
 - **Ollama** – serves locally hosted LLMs (e.g. LLaMA, Mistral)
 - **OpenWebUI** – provides a browser-based chat interface
 - **NVIDIA GPU Operator** – used for automatic GPU provisioning in Kubernetes
+- **GitLab Runner** - Executes CI jobs for LLM testing pipelines
 
 ## 🔧 Services Running
 
@@ -71,8 +74,33 @@ graph TD;
 ### Current Setup (Ethernet with Bridged Networking)
 
 Now running on bridged Ethernet, allowing direct IP assignment to VMs and Kubernetes services. This simplifies service exposure and removes the need for NAT or manual port forwarding.
+- **LAN only** access between nodes
+- **HTTPS** exposed via Nginx proxy
+- **NAT only** access to WAN/internet (via home router)
 
 > Previously, the homelab ran on a USB Wi-Fi adapter which did not support bridged mode in Proxmox. To work around this, I configured NAT and custom iptables rules. This workaround is documented [here](./legacy-networking.md) for reference, in case similar networking constraints arise in other environments.
+
+## 🔐 Access & Security
+
+- **Nginx** reverse proxy with HTTPS termination
+- **Authelia** handles 2FA + authentication
+- Services like Grafana, Homepage, and Webmin are gated behind Authelia
+
+## 📈 Observability Stack
+
+| Tool        | Role                         |
+|-------------|------------------------------|
+| **Prometheus** | Metrics collection from nodes |
+| **Grafana**    | Visualization for all services |
+| **Webmin**     | Admin panel for system config  |
+
+## 🗂️ Homepage Dashboard
+
+A central dashboard (served on the frontend server) lists:
+
+- Links to OpenWebUI, Grafana, GitLab, ArgoCD, Webmin
+- Status for services and containers
+- Auth behind Authelia + Nginx
 
 ---
 
@@ -116,8 +144,9 @@ To simulate a production-like environment for DevOps experimentation and persona
 
 ## 📌 To Do
 
-- [ ] Add Helm-based deployment instructions
-- [ ] Benchmark LLM inference performance
+- [ ] Publish Helm charts for LLM stack
+- [ ] Document Nginx + Authelia config
+- [ ] Add Terraform/Ansible automation for VM provisioning
 - [ ] Set up automatic image version update.
 - [ ] Add common best-practice CI/CD services (GitLab CE, ArgoCD, runner agents, container registry, webhooks, secrets management, etc.)
 
