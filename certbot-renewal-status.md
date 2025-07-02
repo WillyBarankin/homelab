@@ -7,21 +7,21 @@
 
 ## Renewal Configuration
 
-- **Domain:** `willybar.ru-0001`
-- **Renewal Config File:** `/etc/letsencrypt/renewal/willybar.ru-0001.conf`
+- **Domain:** `example.com-0001`
+- **Renewal Config File:** `/etc/letsencrypt/renewal/example.com-0001.conf`
 - **Authenticator:** `certbot-regru:dns` (REG.RU DNS plugin)
 - **Automation:** Fully automated DNS-01 challenge, provided API credentials are set up correctly.
 
 ## Recent Renewal Logs
 
 - On **June 17**, renewal failed due to a challenge error:
-  > Failed to renew certificate willybar.ru-0001 with error: Some challenges have failed.
-  > DNS problem: NXDOMAIN looking up TXT for _acme-challenge.willybar.ru
+  > Failed to renew certificate example.com-0001 with error: Some challenges have failed.
+  > DNS problem: NXDOMAIN looking up TXT for _acme-challenge.example.com
 
 - After increasing DNS propagation wait time to 300 seconds, both certificates renewed successfully:
   > Congratulations, all simulated renewals succeeded:
-  > /etc/letsencrypt/live/willybar.ru-0001/fullchain.pem (success)
-  > /etc/letsencrypt/live/willybar.ru/fullchain.pem (success)
+  > /etc/letsencrypt/live/example.com-0001/fullchain.pem (success)
+  > /etc/letsencrypt/live/example.com/fullchain.pem (success)
 
 ## DNS Propagation Fix
 
