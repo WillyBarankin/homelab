@@ -6,6 +6,20 @@ This project describes a lightweight, GPU-accelerated home lab deployment using 
 
 ---
 
+## 🕒 Planned (Not Yet Implemented) Services
+
+The following services are shown as dimmed blocks in the diagram above and are planned for future implementation:
+
+- **Ansible** – Automation and orchestration tool for infrastructure management
+- **Grafana** – Visualization and dashboarding for monitoring data
+- **Prometheus** – Metrics collection and monitoring
+- **GitLab CE** – Self-hosted Git platform for code and CI/CD
+- **GitLab Runner** – Executes CI/CD pipelines for GitLab
+- **ArgoCD** – Declarative GitOps delivery and continuous deployment for Kubernetes
+- **Secret Vault** – Centralized secrets management (e.g., HashiCorp Vault)
+
+---
+
 ## 📦 Hardware Overview
 
 | Component       | Specification                                 |
