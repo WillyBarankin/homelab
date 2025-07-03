@@ -8,7 +8,7 @@ This project describes a lightweight, GPU-accelerated home lab deployment using 
 
 ## 🕒 Planned (Not Yet Implemented) Services
 
-The following services are shown as dimmed blocks in the diagram above and are planned for future implementation:
+The following services are shown as dimmed blocks in the diagram above and are planned for future implementation. All planned services mentioned elsewhere in this document are consolidated here for clarity:
 
 - **Ansible** – Automation and orchestration tool for infrastructure management
 - **Grafana** – Visualization and dashboarding for monitoring data
@@ -127,6 +127,8 @@ A central dashboard (served on the frontend server) lists:
 
 ### ⚙️ Planned CI/CD Services Deployment
 
+> **Note:** For a complete list of planned services, see the [Planned (Not Yet Implemented) Services](#planned-not-yet-implemented-services) section above.
+
 | Service/Tool                      | Deployment Target      | Rationale |
 |----------------------------------|------------------------|-----------|
 | **GitLab CE**                    | 🆕 **Separate VM**      | GitLab is a resource-intensive service; isolating it improves reliability and avoids contention with K3s workloads. |
@@ -136,11 +138,15 @@ A central dashboard (served on the frontend server) lists:
 
 ### 🆕 Planned New VM
 
+> **Note:** For a complete list of planned services, see the [Planned (Not Yet Implemented) Services](#planned-not-yet-implemented-services) section above.
+
 | VM Name     | Purpose       | Recommended Specs              | Notes |
 |-------------|---------------|-------------------------------|-------|
 | `gitlab-ce` | GitLab Server | 4–8 vCPU, 8–16GB RAM, 100GB+ disk | Hosts GitLab CE and its container registry; backup-friendly and self-contained. |
 
 ## 💡 Planned CI/CD Stack for the Homelab
+
+> **Note:** For a complete list of planned services, see the [Planned (Not Yet Implemented) Services](#planned-not-yet-implemented-services) section above.
 
 To simulate a production-like environment for DevOps experimentation and personal projects, the following CI/CD stack is planned:
 
