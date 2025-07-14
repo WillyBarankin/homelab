@@ -1,0 +1,76 @@
+theme: ${THEME}
+
+server:
+  buffers:
+    read:  ${SERVER_BUFFER_READ}
+    write: ${SERVER_BUFFER_WRITE}
+  address: ${SERVER_ADDRESS}
+
+authentication_backend:
+  file:
+    path: ${AUTH_FILE_PATH}
+
+log:
+  level: ${LOG_LEVEL}
+
+totp:
+  issuer: ${TOTP_ISSUER}
+  period: ${TOTP_PERIOD}
+  skew: ${TOTP_SKEW}
+  digits: ${TOTP_DIGITS}
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: "${DOMAIN1}"
+      policy: two_factor
+      subject:
+        - 'group:admins'
+        - 'group:users'
+    - domain: "${DOMAIN2}"
+      policy: two_factor
+      subject:
+        - 'group:admins'
+        - 'group:users'
+    - domain: "${DOMAIN3}"
+      policy: two_factor
+      subject:
+        - 'group:admins'
+    - domain: "${DOMAIN4}"
+      policy: two_factor
+      subject:
+        - 'group:admins'
+  
+identity_validation:
+  reset_password:
+    jwt_secret: "${RESET_PASSWORD_JWT_SECRET}"
+
+session:
+  secret: "${SESSION_SECRET}"
+  expiration: ${SESSION_EXPIRATION}
+  cookies:
+      - name: ${SESSION_COOKIE_NAME}
+        domain: ${SESSION_COOKIE_DOMAIN}
+        authelia_url: ${SESSION_COOKIE_AUTHELIA_URL}
+        default_redirection_url: ${SESSION_COOKIE_DEFAULT_REDIRECTION_URL}
+
+storage:
+  encryption_key: "${STORAGE_ENCRYPTION_KEY}"
+  local:
+    path: ${STORAGE_LOCAL_PATH}
+
+notifier:
+  smtp:
+    username: "${SMTP_USERNAME}"
+    password: "${SMTP_PASSWORD}"
+    address: "${SMTP_ADDRESS}"
+    sender: "${SMTP_SENDER}"
+    startup_check_address: "${SMTP_STARTUP_CHECK_ADDRESS}"
+    tls:
+      server_name: "${SMTP_TLS_SERVER_NAME}"
+      skip_verify: ${SMTP_TLS_SKIP_VERIFY}
+
+telemetry:
+  metrics:
+    enabled: ${TELEMETRY_METRICS_ENABLED}
+    address: ${TELEMETRY_METRICS_ADDRESS}
