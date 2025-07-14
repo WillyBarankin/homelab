@@ -6,7 +6,7 @@ services:
     container_name: authelia
     restart: unless-stopped
     volumes:
-      - ./configuration.yml:/config/configuration.yml
+      - ./configuration.generated.yml:/config/configuration.yml
       - ./users_database.yml:/config/users_database.yml
       - ./db:/config
     ports:
