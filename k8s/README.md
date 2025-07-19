@@ -14,11 +14,37 @@ k8s/
 ├── charts/               # Helm charts for applications
 │   ├── ollama/           # Ollama LLM server chart
 │   ├── openwebui/        # OpenWebUI frontend chart
-│   └── nvidia-gpu-operator/ # NVIDIA GPU Operator chart
+│   ├── nvidia-gpu-operator/ # NVIDIA GPU Operator chart
+│   └── photoprism/      # PhotoPrism photo management chart
 └── overlays/             # Environment-specific configurations
     ├── development/      # Development environment overlays
     └── production/       # Production environment overlays
 ```
+
+## Accessing the Cluster
+
+To manage your K3s cluster remotely with `kubectl`, you need the kubeconfig file from the control plane node.
+
+1. **Obtain the kubeconfig:**
+   - On the control plane node, the file is located at `/etc/rancher/k3s/k3s.yaml`.
+   - Copy it to your client machine (e.g., with `scp`):
+     ```sh
+     scp user@k3s-control-plane:/etc/rancher/k3s/k3s.yaml ~/k3s.yaml
+     ```
+   - Edit the `server:` line in `k3s.yaml` to use the control plane's real IP or DNS name (not `127.0.0.1`).
+
+2. **Use with kubectl:**
+   - Run:
+     ```sh
+     KUBECONFIG=~/k3s.yaml kubectl get nodes
+     ```
+   - Or set it as your default:
+     ```sh
+     export KUBECONFIG=~/k3s.yaml
+     kubectl get pods -A
+     ```
+
+> **Security Note:** Never commit your kubeconfig file to version control. It contains credentials that grant access to your cluster.
 
 ## 🏗️ Architecture Overview
 
@@ -166,6 +192,11 @@ CI/CD pipelines run on Kubernetes using GitLab Runner. Configuration is in `char
 | **Ollama** | `charts/ollama/` | LLM server with GPU support |
 | **OpenWebUI** | `charts/openwebui/` | Web interface for Ollama |
 | **NVIDIA GPU Operator** | `charts/nvidia-gpu-operator/` | GPU resource management |
+| **PhotoPrism** | `charts/photoprism/` | Self-hosted photo management (Helm chart) |
+
+### PhotoPrism Deployment
+
+PhotoPrism is deployed via its own Helm chart for private photo management and search.
 
 ## 🔗 Related Resources
 
@@ -206,3 +237,5 @@ kubectl exec -it ollama-pod -- nvidia-smi
 # Check ArgoCD application status
 argocd app get llm-stack
 ``` 
+
+> Note: The `charts/` directory for Helm charts does not currently exist. It will be created to store new charts such as photoprism. 

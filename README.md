@@ -1,197 +1,157 @@
-# 🏡 HomeLab Setup: K3s + Ollama + OpenWebUI on Proxmox
+# 🏡 Homelab: Proxmox + K3s + LLMs
 
-This project describes a lightweight, GPU-accelerated home lab deployment using [K3s](https://k3s.io/), [Ollama](https://ollama.com/), and [OpenWebUI](https://github.com/open-webui/open-webui). The system is optimized for for running local large language models (LLMs) with GPU passthrough on a Proxmox-hosted Kubernetes cluster.
-
-<img width="1144" height="1237" alt="image" src="https://github.com/user-attachments/assets/fa6cca5f-7e10-459f-838a-916cc1dcc579" />
-
-
----
-
-## 🕒 Planned (Not Yet Implemented) Services
-
-The following services are shown as dimmed blocks in the diagram above and are planned for future implementation. All planned services mentioned elsewhere in this document are consolidated here for clarity:
-
-- **Ansible** – Automation and orchestration tool for infrastructure management
-- **Grafana** – Visualization and dashboarding for monitoring data
-- **Prometheus** – Metrics collection and monitoring
-- **GitLab CE** – Self-hosted Git platform for code and CI/CD
-- **GitLab Runner** – Executes CI/CD pipelines for GitLab
-- **ArgoCD** – Declarative GitOps delivery and continuous deployment for Kubernetes
-- **Secret Vault** – Centralized secrets management (e.g., HashiCorp Vault)
+## Quick Overview
+- Proxmox VE hypervisor, K3s Kubernetes cluster
+- GPU passthrough for LLM workloads (Ollama, OpenWebUI)
+- PhotoPrism for photo management (on storage node)
+- Secure access: Nginx + Authelia (2FA)
 
 ---
 
-## 📦 Hardware Overview
+## 📚 Documentation
+- [Authelia Config & User Management](./docker/authelia/README.md)
+- [Certbot Renewal Status](./docs/certbot-renewal-status.md)
+- [Cluster Topology & Rationale](./docs/cluster-topology.md)
+- [Deployment Reference Guides](./docs/references.md)
+- [Homepage Config & Customization](./docker/homepage/README.md)
+- [Kubernetes Infrastructure](./k8s/README.md)
+- [Known Limitations](./docs/limitations.md)
+- [Legacy Networking (NAT & Port Forwarding)](./docs/legacy-networking.md)
+- [LLM Stack Details](./docs/llm-stack.md)
+- [Planned CI/CD Stack & Services](./docs/ci-cd.md)
+- [Planned Services Integration Sequence](./docs/planned-services-integration.md)
+- [Roadmap & To-Do](./docs/roadmap.md)
+- [Secrets Management](./secrets/README.md)
+- [Virtualization Environment](./docs/virtualization.md)
+
+---
+
+## 🚀 Services Summary
+| Service         | Node/Location   | Purpose                        |
+|-----------------|-----------------|--------------------------------|
+| Nginx           | Frontend server | Reverse proxy/HTTPS            |
+| Authelia        | Frontend server | Authentication/2FA             |
+| Webmin          | Frontend server, backend server | System admin panel        |
+| Homepage        | Frontend server | Central dashboard              |
+| Ollama          | k3s-w-1         | Local LLM server               |
+| OpenWebUI       | k3s-w-1         | LLM chat frontend              |
+| PhotoPrism      | k3s-w-2         | Photo management               |
+| *GitLab CE* (planned)       | VM              | Git hosting/CI                 |
+| *GitLab Runner* (planned)   | k3s-w-1, k3s-w-2| CI/CD pipelines                |
+| *Secret Vault* (planned)    | VM              | Secrets management             |
+| *ArgoCD* (planned)          | k3s-cp-1        | GitOps CD for K8s              |
+| *Ansible* (planned)         | VM              | Automation/orchestration       |
+| *Prometheus* (planned)      | VM              | Monitoring/metrics             |
+| *Grafana* (planned)        | Frontend server | Dashboards/visualization       |
+| *Proxmox Backup* (planned) | Frontend server | VM backup management           |
+
+---
+
+## 🖥️ Cluster Diagram
+<details>
+<summary>Show Diagram</summary>
+
+![Homelab Infrastructure Diagram](./docs/images/diagram.png)
+
+*Diagram: Homelab infrastructure overview. Dimmed blocks represent planned (not yet implemented) services. Shows Proxmox virtualization, Kubernetes nodes, core services (LLM, PhotoPrism, CI/CD), frontend dashboard, and secure network flow.*
+
+</details>
+
+---
+
+## 🔐 Security & Access
+- Nginx reverse proxy with HTTPS
+- Authelia for 2FA and authentication
+- All sensitive services gated behind Authelia
+
+---
+
+## 🗂️ Homepage Dashboard
+![Homepage Dashboard](./docs/images/homepage_img.png)
+- Central dashboard with links to: OpenWebUI, Grafana, GitLab, ArgoCD, Webmin, PhotoPrism, Proxmox, Authelia, Proxmox Backup
+- Service status and container health
+- Auth via Authelia + Nginx
+
+---
+
+<details>
+<summary>Hardware Overview</summary>
 
 | Component       | Specification                                 |
 |----------------|------------------------------------------------|
-| **CPU**         | Intel Xeon E5-2673 v4 (20 cores / 40 threads) |
+| **CPU**         | Intel Xeon E5-2673 v4 (20c/40t)               |
 | **Motherboard** | X99K (Socket 2011-3)                          |
 | **RAM**         | 64GB DDR4 ECC (4×16GB)                        |
 | **GPU**         | Nvidia EVGA P104-100 (8GB VRAM, unlocked)     |
 | **Storage**     | 1TB Crucial P2 NVMe SSD                       |
 | **NIC**         | 1 Gb/s Ethernet adapter                       |
 
----
+![Server internals](./docs/images/hardware_1.png)
+*Main server interior.*
 
-## 🖥️ Virtualization Environment
+![Homelab servers](./docs/images/hardware_2.png)
+*Homelab servers in operation.*
 
-- **Hypervisor**: Proxmox VE
-- **Virtualization Type**: KVM/QEMU
-- **GPU Passthrough**: Enabled (via `vfio` + NVIDIA GPU Operator in K3s)
-- **Networking**:
-  - **LAN** (bridged) for internal traffic and overlay networks
-  - **NAT** via home router for outbound/internet traffic
-  - **HTTPS exposed** via reverse proxy
+</details>
 
----
-
-## 📈 Cluster Topology
-
-```mermaid
-graph TD;
-    PVE[Proxmox Host] --> K3sMaster[Control Plane Node];
-    PVE --> K3sWorker[Worker Node w/ GPU];
-    PVE -.->|"GPU Passthrough (HW)"| K3sWorker;
-    K3sMaster -->|Runs| Core["Core Services (etcd, kube-apiserver, scheduler)"];
-    K3sWorker -->|Runs| Ollama[Ollama LLM Server];
-    K3sWorker -->|Runs| OpenWebUI[OpenWebUI Frontend];
-    K3sWorker -.->|"NVIDIA GPU Operator (SW)"| Ollama;
-```
-
-> Diagram: Simple two-node K3s cluster running Ollama and OpenWebUI on GPU-enabled worker.
-
----
-
-## 🧠 LLM Stack
-
-- **Ollama** – serves locally hosted LLMs (e.g. LLaMA, Mistral)
-- **OpenWebUI** – provides a browser-based chat interface
-- **NVIDIA GPU Operator** – used for automatic GPU provisioning in Kubernetes
-- **GitLab Runner** - Executes CI jobs for LLM testing pipelines
-
-## 🔧 Services Running
-
-| Node           | Services                                 |
-|----------------|------------------------------------------|
-| Control Plane  | etcd, CoreDNS, kube-apiserver, scheduler |
-| Worker Node    | Ollama, OpenWebUI, NVIDIA Operator       |
-
-## 🚧 Known Limitations
-
-- GPU (**EVGA P104-100**) requires manual unlocking by flashing [this BIOS file](https://www.techpowerup.com/vgabios/228114/228114) using the `nvflash` utility to enable full access to all 8 GB of physical memory.
-- P2 NVMe may throttle under sustained load
-
----
-
-## 🌐 Networking
-
-### Current Setup (Ethernet with Bridged Networking)
-
-Now running on bridged Ethernet, allowing direct IP assignment to VMs and Kubernetes services. This simplifies service exposure and removes the need for NAT or manual port forwarding.
-- **LAN only** access between nodes
-- **HTTPS** exposed via Nginx proxy
-- **NAT only** access to WAN/internet (via home router)
-
-> Previously, the homelab ran on a USB Wi-Fi adapter which did not support bridged mode in Proxmox. To work around this, I configured NAT and custom iptables rules. This workaround is documented [here](./docs/legacy-networking.md) for reference, in case similar networking constraints arise in other environments.
-
-## 🔐 Access & Security
-
-- **Nginx** reverse proxy with HTTPS termination
-- **Authelia** handles 2FA + authentication
-- Services like Grafana, Homepage, and Webmin are gated behind Authelia
-
-## 📈 Observability Stack
-
-| Tool        | Role                         |
-|-------------|------------------------------|
-| **Prometheus** | Metrics collection from nodes |
-| **Grafana**    | Visualization for all services |
-| **Webmin**     | Admin panel for system config  |
-
-## 🗂️ Homepage Dashboard
-
-A central dashboard (served on the frontend server) lists:
-
-- Links to OpenWebUI, Grafana, GitLab, ArgoCD, Webmin
-- Status for services and containers
-- Auth behind Authelia + Nginx
-
----
-
-## 🧮 Virtual Machines on Proxmox
+<details>
+<summary>Virtual Machines</summary>
 
 | VM Name     | Purpose               | Notes |
 |-------------|-----------------------|-------|
-| `k3s-cp-1`  | K3s Control Plane     | Hosts core Kubernetes services: etcd, kube-apiserver, scheduler |
-| `k3s-w-1`   | K3s Worker Node       | GPU-enabled node running Ollama, OpenWebUI, and other workloads |
+| `k3s-cp-1`  | K3s Control Plane     | Hosts core Kubernetes services |
+| `k3s-w-1`   | K3s Worker Node       | GPU-enabled node for LLM workloads |
+| `k3s-w-2`   | K3s Worker Node       | PhotoPrism deployment (storage-focused) |
+| `gitlab-ce` | Planned GitLab Server | 4–8 vCPU, 8–16GB RAM, 100GB+ disk |
 
-### ⚙️ Planned CI/CD Services Deployment
+</details>
 
-> **Note:** For a complete list of planned services, see the [Planned (Not Yet Implemented) Services](#planned-not-yet-implemented-services) section above.
+<details>
+<summary>Networking</summary>
 
-| Service/Tool                      | Deployment Target      | Rationale |
-|----------------------------------|------------------------|-----------|
-| **GitLab CE**                    | 🆕 **Separate VM**      | GitLab is a resource-intensive service; isolating it improves reliability and avoids contention with K3s workloads. |
-| **GitLab Runner**                | `k3s-w-1` (K3s)         | Easily deployed via Helm inside K3s; leverages Kubernetes scheduling and scaling. |
-| **ArgoCD**                       | `k3s-cp-1` (K3s)        | Designed to run within Kubernetes; integrates tightly with GitOps workflows. |
-| **External Secrets / SOPS + KMS** | `k3s-cp-1` (K3s)       | Lightweight controller; clean integration into K3s for secret syncing from encrypted files. |
+- Bridged Ethernet for direct VM/K8s service IPs
+- HTTPS via Nginx reverse proxy
+- NAT for outbound traffic (via home router)
+- [Legacy NAT/iptables workaround](./docs/legacy-networking.md) for Wi-Fi-only setups
 
-### 🆕 Planned New VM
+</details>
 
-> **Note:** For a complete list of planned services, see the [Planned (Not Yet Implemented) Services](#planned-not-yet-implemented-services) section above.
+<details>
+<summary>LLM Stack & Observability</summary>
 
-| VM Name     | Purpose       | Recommended Specs              | Notes |
-|-------------|---------------|-------------------------------|-------|
-| `gitlab-ce` | GitLab Server | 4–8 vCPU, 8–16GB RAM, 100GB+ disk | Hosts GitLab CE and its container registry; backup-friendly and self-contained. |
+- **Ollama**: Local LLM server (LLaMA, Mistral, etc.)
+- **OpenWebUI**: Web chat interface for Ollama
+- **NVIDIA GPU Operator**: Automatic GPU provisioning in K8s
+- **PhotoPrism**: Private photo management/search
+- **Prometheus & Grafana**: Monitoring (planned)
+- **Webmin**: System admin panel
 
-## 💡 Planned CI/CD Stack for the Homelab
+</details>
 
-> **Note:** For a complete list of planned services, see the [Planned (Not Yet Implemented) Services](#planned-not-yet-implemented-services) section above.
+<details>
+<summary>Secrets Management</summary>
 
-To simulate a production-like environment for DevOps experimentation and personal projects, the following CI/CD stack is planned:
+- HashiCorp Vault for centralized secrets
+- External Secrets Operator for K8s secret injection
+- SOPS template for encrypted K8s secrets
 
-| Category            | Tool/Service     | Purpose                                                                 |
-|---------------------|------------------|-------------------------------------------------------------------------|
-| **Git Hosting**     | GitLab CE        | Centralized Git repository management and integrated CI/CD platform     |
-| **Runners**         | GitLab Runner    | Executes CI/CD pipelines on Kubernetes worker nodes                     |
-| **K8s GitOps**      | ArgoCD           | Declarative GitOps delivery and continuous deployment for K8s workloads |
-| **Container Registry** | GitLab Container Registry (self-hosted) | Stores Docker images securely within the GitLab CE environment          |
-| **Secrets Management** | External Secrets / SOPS + KMS | Secure injection of secrets into Kubernetes from version-controlled encrypted files |
-| **Webhook Gateway** | Gitea Webhook Proxy / GitLab Webhooks | Event-based triggers for pipelines and auto-deploy hooks                 |
-| **Monitoring & Alerts** | Prometheus + Alertmanager | Observability stack for CI runners, ArgoCD status, and pod health        |
-| **Dashboarding**    | Grafana          | Visualization of CI/CD and cluster health metrics                        |
+</details>
 
+<details>
+<summary>Known Limitations</summary>
 
-## 📌 To Do
+- GPU (EVGA P104-100) requires BIOS flash for full VRAM
+- NVMe may throttle under sustained load
 
-- [ ] Publish Helm charts for LLM stack
-- [ ] Document Nginx + Authelia config
-- [ ] Add Terraform/Ansible automation for VM provisioning
-- [ ] Set up automatic image version update.
-- [ ] Add common best-practice CI/CD services (GitLab CE, ArgoCD, runner agents, container registry, webhooks, secrets management, etc.)
+</details>
 
----
+<details>
+<summary>Reference Guides</summary>
 
-## 🔗 Deployment Reference Guides
+- [K3s Docs](https://docs.k3s.io/installation/)
+- [Proxmox PCI(e) Passthrough](https://pve.proxmox.com/wiki/Pci_passthrough)
+- [NVIDIA GPU Operator Docs](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/)
+- [OpenWebUI GitHub](https://github.com/open-webui/open-webui)
+- [Ollama GitHub](https://github.com/ollama/ollama)
 
-Here are helpful guides I used when setting up this homelab. Each link points to a well-written and updated resource:
-
-- [**K3s Docs**](https://docs.k3s.io/installation/)
-  Official K3s documentation on setting up K3s in various environments.
-
-- [**Proxmox Wiki - PCI(e) Passthrough**](https://pve.proxmox.com/wiki/Pci_passthrough)
-  Official Proxmox guide on configuring IOMMU, GRUB, and passthrough devices.
-
-- [**NVIDIA Official GPU Operator Docs**](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/)
-  Canonical resource for deploying the GPU Operator with Helm or manifests.
-
-- [**GitHub - NVIDIA GPU Operator Repo**](https://github.com/NVIDIA/gpu-operator)
-  Source code and deployment examples.
-
-- [**OpenWebUI GitHub (K8s manifests available)**](https://github.com/open-webui/open-webui)
-  Includes Docker and Kubernetes options, community-maintained.
-
-- [**Ollama - Github**](https://github.com/ollama/ollama)
-  Official instructions for CLI usage, model downloads, and local hosting.
-
+</details>

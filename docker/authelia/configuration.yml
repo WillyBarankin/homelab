@@ -40,6 +40,10 @@ access_control:
       policy: two_factor
       subject:
         - 'group:admins'
+    - domain: "${DOMAIN5}"
+      policy: two_factor
+      subject:
+        - 'group:admins'
   
 identity_validation:
   reset_password:

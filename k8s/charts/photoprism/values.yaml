@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: photoprism/photoprism
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  nodePort: 31000
+  port: 2342
+
+resources:
+  requests:
+    cpu: 2
+    memory: 4Gi
+  limits:
+    cpu: 12
+    memory: 20Gi
+
+persistence:
+  enabled: true
+  photos:
+    size: 450Gi
+    storageClass: "local-path"
+  storage:
+    size: 10Gi
+    storageClass: "local-path"
+
+env:
+  PHOTOPRISM_ORIGINALS_PATH: /photoprism/originals
+  PHOTOPRISM_IMPORT_PATH: /photoprism/originals/import
+  PHOTOPRISM_STORAGE_PATH: /photoprism/storage 

@@ -31,6 +31,13 @@
         siteMonitor: {{HOMEPAGE_VAR_WEBMIN_HREF}}
 
 - Other:
-    - My Third Service:
-        href: http://localhost/
-        description: Homepage is 😎
+    - PhotoPrism:
+        href: {{HOMEPAGE_VAR_PHOTOPRISM_HREF}}
+        icon: photoprism
+        description: Photo archive
+        widget:
+          type: photoprism
+          url: {{HOMEPAGE_VAR_PHOTOPRISM_URL}}
+          username: {{HOMEPAGE_VAR_PHOTOPRISM_USER}}
+          password: {{HOMEPAGE_VAR_PHOTOPRISM_PASS}}
+        siteMonitor: {{HOMEPAGE_VAR_PHOTOPRISM_URL}}

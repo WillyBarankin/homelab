@@ -8,6 +8,5 @@ services:
     volumes:
       - ./configuration.generated.yml:/config/configuration.yml
       - ./users_database.yml:/config/users_database.yml
-      - ./db:/config
     ports:
       - "9091:9091"
