@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "photoprism.fullname" . }}
+  labels:
+    app: {{ include "photoprism.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "photoprism.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "photoprism.name" . }}
+    spec:
+      containers:
+        - name: photoprism
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 2342
+          env:
+            - name: PHOTOPRISM_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: photoprism-secret
+                  key: PHOTOPRISM_ADMIN_PASSWORD
+            - name: PHOTOPRISM_ORIGINALS_PATH
+              value: "{{ .Values.env.PHOTOPRISM_ORIGINALS_PATH }}"
+            - name: PHOTOPRISM_IMPORT_PATH
+              value: "{{ .Values.env.PHOTOPRISM_IMPORT_PATH }}"
+            - name: PHOTOPRISM_STORAGE_PATH
+              value: "{{ .Values.env.PHOTOPRISM_STORAGE_PATH }}"
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+          volumeMounts:
+            - name: photos
+              mountPath: /photoprism/originals
+            - name: storage
+              mountPath: /photoprism/storage
+      volumes:
+        - name: photos
+          persistentVolumeClaim:
+            claimName: {{ include "photoprism.fullname" . }}-photos
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ include "photoprism.fullname" . }}-storage 

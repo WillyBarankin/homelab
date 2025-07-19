@@ -1,0 +1,19 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: willybar.ru
+      LOG_LEVEL: info
+      PUID: 1000
+      PGID: 111
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./icons:/app/public/icons
+      - /mnt/storage:/mnt/storage:ro
+    restart: unless-stopped
+    env_file:
+      - .env

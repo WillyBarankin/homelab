@@ -1,0 +1,5 @@
+apiVersion: v2
+name: photoprism
+description: A Helm chart for deploying PhotoPrism
+version: 0.1.0
+appVersion: "latest" 

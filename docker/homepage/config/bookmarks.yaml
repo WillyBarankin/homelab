@@ -1,0 +1,21 @@
+- Development:
+    - Github page:
+        - icon: github.png
+          href: https://github.com/willybarankin/homelab
+    - draw.io:
+        - icon: /icons/drawio_logo.png
+          href: https://app.diagrams.net
+- Job:
+    - Resume:
+        - icon: /icons/hh_logo.png
+          href: https://hh.ru/resume/8dd422d4ff099fcaf20039ed1f476c62464254
+    - DevOps roadmap:
+        - icon: /icons/roadmap_logo.png
+          href: https://roadmap.sh/devops
+- External LLM:
+    - ChatGPT:
+        - icon: /icons/chatgpt_logo.png
+          href: https://chatgpt.com
+    - DeepSeek:
+        - icon: /icons/deepseek_logo.png
+          href: https://deepseek.com

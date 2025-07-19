@@ -1,0 +1,43 @@
+- Backend:
+    - Proxmox:
+        href: {{HOMEPAGE_VAR_PROXMOX_HREF}}
+        icon: proxmox
+        description: hypervisor
+        widget:
+          type: proxmox
+          url: {{HOMEPAGE_VAR_PROXMOX_URL}}
+          username: {{HOMEPAGE_VAR_PROXMOX_USER}}
+          password: {{HOMEPAGE_VAR_PROXMOX_PASS}}
+          node: proxmox
+        siteMonitor: {{HOMEPAGE_VAR_PROXMOX_URL}}
+
+- Frontend:
+    - Authelia:
+        href: {{HOMEPAGE_VAR_AUTHELIA_HREF}}
+        icon: authelia
+        description: authentication portal
+        server: my-docker
+        siteMonitor: {{HOMEPAGE_VAR_AUTHELIA_URL}}
+        container: authelia
+    - Open Web-UI:
+        href: {{HOMEPAGE_VAR_OPENWEBUI_HREF}}
+        icon: ollama
+        description: Ollama frontend
+        siteMonitor: {{HOMEPAGE_VAR_OPENWEBUI_URL}}
+    - Webmin:
+        href: {{HOMEPAGE_VAR_WEBMIN_HREF}}
+        icon: webmin
+        description: server control panel
+        siteMonitor: {{HOMEPAGE_VAR_WEBMIN_HREF}}
+
+- Other:
+    - PhotoPrism:
+        href: {{HOMEPAGE_VAR_PHOTOPRISM_HREF}}
+        icon: photoprism
+        description: Photo archive
+        widget:
+          type: photoprism
+          url: {{HOMEPAGE_VAR_PHOTOPRISM_URL}}
+          username: {{HOMEPAGE_VAR_PHOTOPRISM_USER}}
+          password: {{HOMEPAGE_VAR_PHOTOPRISM_PASS}}
+        siteMonitor: {{HOMEPAGE_VAR_PHOTOPRISM_URL}}

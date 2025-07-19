@@ -1,0 +1,25 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/info-widgets/
+
+- datetime:
+    text_size: xl
+    locale: kz
+    format:
+      dateStyle: short
+      timeStyle: short
+      hourCycle: h23
+
+- resources:
+    cputemp: true
+    memory: true
+    disk: 
+      - /
+      - /mnt/storage
+    cpu: true
+    network: true
+    uptime: true
+
+#- search:
+#    provider: google
+#    target: _blank
